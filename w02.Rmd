@@ -1,0 +1,161 @@
+## Week 2 (Session 1) - May 15, 2023
+**material to cover:**
+
+**0.**
+--- Data
+
+```{r, data}
+
+data <- read.csv('movies.csv')
+head(data, 5)
+```
+
+
+**1.**
+--- Measure of location, (mean, median and mode)
+
+***MEAN*** 
+```{r, locations}
+
+print('Want to know What is the average rating for movies made in a particular year?')
+msg = ' Enter the Year: '
+
+yr <- readline(prompt = msg)
+yr <- as.integer(yr)
+
+calc_mean <- function(year_){
+    particular_year <- subset(data$imbd_rating, data$year == year_)
+    
+    rt_avg <- mean(particular_year)
+    out <- list(particular_year, rt_avg)
+    
+    return(out)
+} 
+
+func_out <- calc_mean(yr)
+output_list <- func_out[1]
+output_avg <- func_out[2]
+
+print('Here are some of the ratings from this year: ')
+output_list
+
+yr_str <- as.character(yr)
+
+sprintf('The average ratings of the movies on this list from the year %s is %f .', yr_str, output_avg)
+
+```
+***MEDIAN***
+```{r}
+#same function, except calculate median 
+calc_median <- function(year_){
+    particular_year <- subset(data$imbd_rating, data$year == year_)
+    
+    rt_med <- median(particular_year)
+
+    
+    return(rt_med)
+} 
+
+median_out <- calc_median(yr)
+
+sprintf('The Median ratings for year %s is %f .', yr_str, median_out)
+
+```
+
+
+***MODE***
+***MEDIAN***
+```{r}
+#same function, except calculate mode 
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+calc_mode <- function(year_){
+    particular_year <- subset(data$imbd_rating, data$year == year_)
+    
+    rt_mod <- getmode(particular_year)
+
+    
+    return(rt_mod)
+} 
+
+mode_out <- calc_mode(yr)
+
+sprintf('The Mode ratings for year %s is %f .', yr_str, mode_out)
+
+```
+
+----------------------------------------------------------
+--- Measure of variability, (variance, standard deviation) 
+
+```{r, variability}
+
+calc_var <- function(year_){
+    particular_year <- subset(data$imbd_rating, data$year == year_)
+    
+    rt_var <- var(particular_year)
+    
+    
+    return(rt_var)
+}
+
+
+sprintf('The Variance of ratings for year %s is %f .', yr_str, calc_var(yr)) 
+
+```
+
+**2.**
+Bayes Rule: 
+
+```{r}
+
+#fill this part out 
+
+```
+
+----------------
+----------------
+**add**
+- Histograms :
+>>> Let's see the distribution of films in the Top 250 based on year of release. 
+
+```{r}
+
+release_date <- data$year 
+hist(release_date)
+
+```
+
+```{r}
+
+hist(release_date,
+main="Year of Release for IMDB TOP 250 Films",
+xlab="Release Date (year)",
+col="#bfb12e",
+freq=FALSE)
+
+```
+
+Save your Histogram in a file: 
+
+```{r}
+# Give the chart file a name.
+png(file = "session1_histogram.png")
+
+hist(release_date,
+main="Year of Release for IMDB TOP 250 Films",
+xlab="Release Date (year)",
+col="#bfb12e")
+
+# Save the file.
+dev.off()
+```
+
+
+
+
+
+
+
