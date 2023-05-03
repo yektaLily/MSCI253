@@ -1,18 +1,37 @@
-## Week 2 (Session 1) - May 15, 2023
+
+---
+title: 'w02'
+author: 'Yekta Amirkhalili'
+date: 'May 2nd, 2023'
+output: pdf_document 
+---
+
+
+### Week 2 (Session 1) - May 15, 2023
 **material to cover:**
 
+---
 **0.**
---- Data
+...**Data**...
+
 
 ```{r, data}
 
+library(rlang)
+library(dplyr)
+
+
 data <- read.csv('movies.csv')
-head(data, 5)
+
+
+subData <- select(data, title, year)
+
+head(subData, 5)
 ```
 
 
 **1.**
---- Measure of location, (mean, median and mode)
+...**Measure of location, (mean, median and mode)**...
 
 ***MEAN*** 
 ```{r, locations}
@@ -62,9 +81,8 @@ sprintf('The Median ratings for year %s is %f .', yr_str, median_out)
 
 ```
 
-
 ***MODE***
-***MEDIAN***
+
 ```{r}
 #same function, except calculate mode 
 getmode <- function(v) {
@@ -87,8 +105,8 @@ sprintf('The Mode ratings for year %s is %f .', yr_str, mode_out)
 
 ```
 
-----------------------------------------------------------
---- Measure of variability, (variance, standard deviation) 
+
+...**Measure of variability, (variance, standard deviation)**...
 
 ```{r, variability}
 
@@ -107,19 +125,101 @@ sprintf('The Variance of ratings for year %s is %f .', yr_str, calc_var(yr))
 ```
 
 **2.**
-Bayes Rule: 
+~~~**Bayes Rule**~~~
+
+*Introduction*
+
+1. Bayes First Rule:
+
+$$P(E) = \sum_{i = 1}^n P(E|F_{i})P(F_{i}) $$
+
+> Ex1. Suppose we have two baskets. Basket A has 3 Red and 2 White balls in it. Basket B has 3 Red and 4 White balls in it. We randomly pick one ball from Basket A and transfer it to Basket B. Then we pick a ball, randomly, out of Basket B. What is the probability of the chosen ball being white? 
+
+
 
 ```{r}
 
-#fill this part out 
+bas_A = c('r','r','r', 'w','w')
+bas_B = c('r','r','r', 'w','w','w','w')
+
+pick_white_prob <- function(basket){
+    #probability of picking white 
+    total <- length(basket)
+    basket_counts <- table(basket)
+    whites <- basket_counts[names(basket_counts) == 'w']
+    
+    prob <- whites/total
+    return(prob)
+    
+}
+
+pick_red_prob <- function(basket){
+    #probability of picking white 
+    total <- length(basket)
+    basket_counts <- table(basket)
+    reds <- basket_counts[names(basket_counts) == 'r']
+    
+    prob <- reds/total
+    return(prob)
+    
+}
 
 ```
 
-----------------
-----------------
+* Scenario 1 
+We pick 1 white ball from Basket A, transfer it to Basket B. Therefore, we now have 3 Red and 5 Whites in Basket B. 
+
+* Scenario 2 
+We pick 1 red ball from Basket A, transfer it to Basket B. Therefore, we now have 4 Red and 4 Whites in Basket B. 
+
+In any case, the final probability calculation depends on what happened in the first pick. Let's see this in action! 
+
+```{r, scn}
+
+scenario <- function(num){
+    #scenario 1 
+    if(num == 1){
+        new_b <- c('r','r','r','w','w','w','w', 'w')
+    }else{ #scenario 2
+        new_b <- c('r','r','r','r','w','w','w','w')
+    }
+    
+    return(new_b)
+    
+}
+
+
+```
+
+
+```{r, probability}
+
+newBasket1 <- scenario(1)
+newBasket2 <- scenario(2)
+
+
+prob_ <- function(a, b1, b2){
+    
+    # pick white from A, pick white from B of Scenario 1  
+    total_prob_p1 <- pick_white_prob(a) * pick_white_prob(b1)
+    
+    #pick red from A, pick white from new B 
+    total_prob_p2 <- pick_red_prob(a) * pick_white_prob(b2)
+    
+    probability <- total_prob_p1 + total_prob_p2
+    
+    return(probability)
+    
+}
+
+prob_(bas_A, newBasket1, newBasket2)
+
+```
+
 **add**
-- Histograms :
->>> Let's see the distribution of films in the Top 250 based on year of release. 
+...**Histograms**...
+
+> Let's see the distribution of films in the Top 250 based on year of release. 
 
 ```{r}
 
